@@ -1,6 +1,6 @@
 // Propriedade Intelectual de Antonio Batista (linkedin.com/in/antonio-batista1)
 
-import React from 'react';
+import React, { useState } from 'react';
 import { GitHubIcon, HeartIcon, MessageIcon } from './icons';
 
 /**
@@ -10,11 +10,24 @@ import { GitHubIcon, HeartIcon, MessageIcon } from './icons';
  */
 const ContributeSection: React.FC = () => {
     
+  // Estados para controlar os valores dos campos do formulário de feedback.
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
   // Função para lidar com o envio do formulário de feedback.
+  // Constrói um link 'mailto:' para abrir o cliente de e-mail padrão do usuário.
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Previne o recarregamento da página.
-    alert("Obrigado pelo seu feedback!"); // Exibe uma mensagem de confirmação.
-    (e.target as HTMLFormElement).reset(); // Limpa o formulário.
+    
+    const subject = encodeURIComponent("Feedback - My Open Company");
+    const body = encodeURIComponent(`Email do remetente: ${email}\n\nMensagem:\n${message}`);
+    
+    // Abre o cliente de e-mail.
+    window.location.href = `mailto:antoniobatistaproducts@gmail.com?subject=${subject}&body=${body}`;
+
+    // Limpa o formulário após a tentativa de envio.
+    setEmail('');
+    setMessage('');
   };
     
   return (
@@ -59,8 +72,22 @@ const ContributeSection: React.FC = () => {
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">Envie seu Feedback</h3>
             <form onSubmit={handleFormSubmit} className="space-y-4">
-              <input type="email" placeholder="Seu email" required className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              <textarea placeholder="Sua mensagem..." required rows={4} className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+              <input 
+                type="email" 
+                placeholder="Seu email" 
+                required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+              />
+              <textarea 
+                placeholder="Sua mensagem..." 
+                required 
+                rows={4} 
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
               <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">
                 Enviar Mensagem
               </button>

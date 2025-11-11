@@ -22,7 +22,7 @@ const Header: React.FC = () => {
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <Logo />
             <span className="text-xl font-bold text-gray-800 tracking-wider hidden sm:block">
-              My Open
+              My Open Company
             </span>
           </div>
           {/* Navegação principal para as seções da página */}
