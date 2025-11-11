@@ -1,3 +1,5 @@
+// Propriedade Intelectual de Antonio Batista (linkedin.com/in/antonio-batista1)
+
 import React, { useState, useMemo } from 'react';
 import { Product, BlogPost } from './types';
 import Header from './components/Header';
@@ -10,13 +12,14 @@ import ContributeSection from './components/ContributeSection';
 import BlogSection from './components/BlogSection';
 import BlogPostModal from './components/BlogPostModal';
 
+// Dados estáticos dos produtos. Em uma aplicação real, isso viria de uma API.
 const productsData: Product[] = [
   {
     id: 1,
     title: "My Open Board",
-    description: "A collaborative open-source whiteboard for teams.",
-    longDescription: "My Open Board is a powerful, real-time collaborative whiteboard designed for teams of all sizes. Brainstorm ideas, plan projects, and visualize workflows with an infinite canvas. It's free, open-source, and self-hostable, putting you in control of your data.",
-    imageUrl: "https://picsum.photos/seed/myopenboard/600/400",
+    description: "Project Board 100% GRATUITO e com a sua cara!",
+    longDescription: "Chega de JIRA! Venha para o My Open Board! Um project board 100% gratuito!",
+    imageUrl: "https://i.imgur.com/kZ5A73z.png",
     url: "https://myopenboard.vercel.app",
     isPaid: false,
     hasDonation: true,
@@ -57,6 +60,7 @@ const productsData: Product[] = [
   },
 ];
 
+// Dados estáticos das postagens do blog.
 const blogPostsData: BlogPost[] = [
   {
     id: 1,
@@ -78,23 +82,38 @@ const blogPostsData: BlogPost[] = [
   },
 ];
 
-
+/**
+ * @component App
+ * @description O componente principal que orquestra toda a aplicação.
+ * Gerencia o estado global, como o produto ou post selecionado para o modal,
+ * e a lógica de busca e filtro de produtos.
+ */
 const App: React.FC = () => {
+  // Estado para controlar qual produto está selecionado para ser exibido no modal.
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  // Estado para controlar qual post de blog está selecionado.
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  // Estado para o termo de busca inserido pelo usuário.
   const [searchTerm, setSearchTerm] = useState('');
+  // Estado para o filtro de preço (todos, gratuitos, pagos).
   const [priceFilter, setPriceFilter] = useState('all'); // 'all', 'free', 'paid'
 
+  // Funções para abrir e fechar o modal de produtos.
   const handleOpenModal = (product: Product) => setSelectedProduct(product);
   const handleCloseModal = () => setSelectedProduct(null);
   
+  // Funções para abrir e fechar o modal de postagens do blog.
   const handleOpenPostModal = (post: BlogPost) => setSelectedPost(post);
   const handleClosePostModal = () => setSelectedPost(null);
 
+  // Memoiza a lista de produtos filtrados para otimizar o desempenho.
+  // A lista só é recalculada quando o termo de busca ou o filtro de preço mudam.
   const filteredProducts = useMemo(() => {
     return productsData.filter(product => {
+      // Verifica se o título ou a descrição do produto correspondem ao termo de busca (insensível a maiúsculas/minúsculas).
       const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                             product.description.toLowerCase().includes(searchTerm.toLowerCase());
+      // Verifica se o produto corresponde ao filtro de preço selecionado.
       const matchesFilter = priceFilter === 'all' || 
                             (priceFilter === 'free' && !product.isPaid) || 
                             (priceFilter === 'paid' && product.isPaid);
@@ -102,9 +121,11 @@ const App: React.FC = () => {
     });
   }, [searchTerm, priceFilter]);
 
+  // Renderiza a estrutura da página, passando os dados e funções necessários para os componentes filhos.
   return (
-    <div className="relative min-h-screen bg-gray-900 overflow-x-hidden">
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900/40 z-0"></div>
+    <div className="relative min-h-screen bg-gray-50 overflow-x-hidden">
+      {/* Elemento de fundo com gradiente */}
+      <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-br from-white via-blue-50 to-blue-100/60 z-0"></div>
       <div className="relative z-10">
         <Header />
         <main>
@@ -122,6 +143,7 @@ const App: React.FC = () => {
           <FounderSection />
         </main>
         <Footer />
+        {/* Modais são renderizados aqui, mas só são visíveis quando um item é selecionado. */}
         <ProductModal product={selectedProduct} onClose={handleCloseModal} />
         <BlogPostModal post={selectedPost} onClose={handleClosePostModal} />
       </div>
